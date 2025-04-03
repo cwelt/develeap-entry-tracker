@@ -26,10 +26,11 @@ jobs:
         with:
           python-version: '3.10'
           cache: 'pip' # caching pip dependencies
-      - name: Build 
-        run: | 
+      - name: Build (Install Dependencies)
+        run: 
           pip install -r requirements.txt
-          chmod +x app.py
+      - name: Run Application 
+      - run: |
           nohup python app.py > flask.log 2>&1 & 
           cat flask.log
       - name: Unit test 
