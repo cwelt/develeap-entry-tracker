@@ -35,3 +35,11 @@ jobs:
           sleep 3s
           cat flask.log
           curl -vv http://127.0.0.1:5000
+          # Make a curl request and capture the HTTP status code
+          response=$(curl -o /dev/null -s -w "%{http_code}" http://example.com)
+          # Check if the status code is 200
+          if [ "$response" -eq 200 ]; then
+            echo "Success: HTTP 200 returned!"
+          else
+            echo "Failed: HTTP status code is $response"
+          fi
