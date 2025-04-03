@@ -34,4 +34,4 @@ jobs:
           nohup python app.py > flask.log 2>&1 & 
           cat flask.log
       - name: Unit test 
-        run: curl -v localhost:5000
+        run: curl -v http://localhost:5000
