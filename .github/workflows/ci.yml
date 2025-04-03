@@ -27,11 +27,11 @@ jobs:
           python-version: '3.10'
           cache: 'pip' # caching pip dependencies
       - name: Build (Install Dependencies)
-        run: 
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
       - name: Run Application 
-        run: 
-          nohup python app.py &
-      - run: sleep 3s
+        run: nohup python app.py > flask.log 2>&1 &
       - name: Unit test 
-        run: curl -v http://localhost:5000
+        run: | 
+          sleep 3s
+          cat flask.log
+          curl -vv http://127.0.0.1:5000
