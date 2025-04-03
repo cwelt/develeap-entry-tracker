@@ -30,6 +30,7 @@ jobs:
         run: | 
           pip install -r requirements.txt
           chmod +x app.py
-          python app.py 
+          nohup python app.py > flask.log 2>&1 & 
+          cat flask.log
       - name: Unit test 
         run: curl -v localhost:5000
