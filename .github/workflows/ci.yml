@@ -27,7 +27,7 @@ jobs:
           cat app.log
       - name: Unit test 
         run: | 
-          response_code=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:5000)
+          response_code=$(curl -o /dev/null -s -v -w "%{http_code}" http://localhost:5000)
           if [ "$response_code" -eq 200 ]; then      # Assert application is up and running
             echo "Health check completed successfully: HTTP status code is $response_code."
           else
