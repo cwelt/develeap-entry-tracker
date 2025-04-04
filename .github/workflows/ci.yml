@@ -34,3 +34,8 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Package Application
+        run: docker build -t entry-tracker:latest .
