@@ -28,7 +28,9 @@ jobs:
           cat app.log
           response_code=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:5000)
           # Check if the status code is 200
-          if ! [ "$response" -eq 200 ]; then
-            echo "Error: Health Check Failed: HTTP status code is $response_code"
-            exit 1
+          if [ "$response_code" -eq 200 ]; then
+            echo "Health check completed successfully: HTTP status code is $response_code."
+          else
+            echo "Health check failed: HTTP status code is $response_code."
+            exit 1          
           fi
