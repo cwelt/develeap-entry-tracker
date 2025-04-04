@@ -21,11 +21,12 @@ jobs:
       - name: Build (Install Dependencies)
         run: pip install -r requirements.txt
       - name: Run Application 
-        run: nohup python app.py > app.log 2>&1 &
-      - name: Unit test 
         run: | 
+          nohup python app.py > app.log 2>&1 &
           sleep 3s
           cat app.log
+      - name: Unit test 
+        run: | 
           response_code=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:5000)
           if [ "$response_code" -eq 200 ]; then      # Assert application is up and running
             echo "Health check completed successfully: HTTP status code is $response_code."
