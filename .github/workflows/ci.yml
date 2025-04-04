@@ -1,26 +1,18 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository 
         uses: actions/checkout@v4
-
       - name: Setup Python
         uses: actions/setup-python@v5.5.0
         with:
@@ -29,17 +21,14 @@ jobs:
       - name: Build (Install Dependencies)
         run: pip install -r requirements.txt
       - name: Run Application 
-        run: nohup python app.py > flask.log 2>&1 &
+        run: nohup python app.py > app.log 2>&1 &
       - name: Unit test 
         run: | 
           sleep 3s
-          cat flask.log
-          curl -vv http://127.0.0.1:5000
-          # Make a curl request and capture the HTTP status code
-          response=$(curl -o /dev/null -s -w "%{http_code}" http://example.com)
+          cat app.log
+          response_code=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:5000)
           # Check if the status code is 200
-          if [ "$response" -eq 200 ]; then
-            echo "Success: HTTP 200 returned!"
-          else
-            echo "Failed: HTTP status code is $response"
+          if ! [ "$response" -eq 200 ]; then
+            echo "Error: Health Check Failed: HTTP status code is $response_code"
+            exit 1
           fi
