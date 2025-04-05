@@ -1,14 +1,15 @@
 
 services:
   web:
-    image: entry-tracker:latest
+    build: .
     container_name: flask-app
     environment:
       - DB_HOST=${DB_HOST}    # change this when replacing MySQL contianer with another database
       - DB_USER=${DB_USER}    # change this when replacing MySQL contianer with another database
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
-
+    env_file:
+      - .env
     ports:
       - "5000:5000"
     depends_on:
@@ -17,7 +18,7 @@ services:
       - app_network
 
   mysql:
-    image: mysql:8.0-bookworm
+    image: mysql:5.7
     container_name: mysql-db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
