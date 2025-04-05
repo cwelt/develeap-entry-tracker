@@ -36,16 +36,13 @@ def create_table_if_not_exists():
 
 @app.route('/health-check')
 def health_check():
-    # Connect to the database
     connection = get_db_connection()
-    
     try:
+        # Connect to the database
         create_table_if_not_exists()
-        
         # Assert database is connected 
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1 FROM request_log WHERE ID = 1")
-        
         return (jsonify({"message": f"Application is up and running."}), 200)
     except Exception as e:
         return (jsonify({"message": f"Server failed connecting to the database. Error: {str(e)}"}), 500)
