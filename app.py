@@ -76,8 +76,7 @@ def home():
         connection.close()
 
         return jsonify({
-            "message": "Data fetched successfully from the database.",
-            "total_entries": len(previous_entries),
+            "message": f"Data fetched successfully from the database. \nTotal Entries: {len(previous_entries)}",
             "current_entry": current_entry,
             "previous_entries": previous_entries
         })
