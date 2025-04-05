@@ -19,7 +19,7 @@ services:
       - app_network
 
   mysql:
-    image: mysql:8.0-debian
+    image: mysql:8.0-bookworm
     container_name: mysql-db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
