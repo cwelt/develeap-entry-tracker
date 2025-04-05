@@ -11,7 +11,8 @@ DB_CONFIG = {
     'host': os.environ.get('DB_HOST', 'mysql'),  
     'user': os.environ.get('DB_USER', 'root'), 
     'password': os.environ.get('DB_PASSWORD'),  
-    'database': os.environ.get('DB_NAME')
+    'database': os.environ.get('DB_NAME'),
+    'port': os.environ.get('DB_PORT')
 }
 
 def get_db_connection():
