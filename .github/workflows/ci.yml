@@ -52,12 +52,23 @@ jobs:
           overwrite: true
           retention-days: 7
           if-no-files-found: error
-      - name: prepare-environment 
+      - name: Prepare Environment 
         run: echo "${{ secrets.ENV_FILE }}" > .env
-      - name: e2e-test
+      - name: Deploy Application With Docker Compose
         run: |
-          docker compose up &
+          docker compose -d
           docker ps -a
+              - name: Unit test 
+      - name: Run E2E Test
+        run: | 
+          response_code=$(curl -o /dev/null -s -v -w "%{http_code}" http://localhost:5000)
+          if [ "$response_code" -eq 200 ]; then      # Assert application is up and running
+            echo "Health check completed successfully: HTTP status code is $response_code."
+          else
+            echo "Health check failed: HTTP status code is $response_code."
+            exit 1          
+          fi
+        
         
           
           
