@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository 
@@ -34,8 +34,13 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
-  package:
+  integration-test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository 
+        uses: actions/checkout@v4
       - name: Package Application
-        run: docker build -t entry-tracker:latest .
+        run: | 
+          docker build -t entry-tracker:latest .
+          docker images
+        
