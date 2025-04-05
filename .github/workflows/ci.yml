@@ -34,7 +34,7 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
-          curl -vv http://localhost:5000/health-check
+          curl -vv http://localhost:5000/health
   build:
     runs-on: ubuntu-latest
     steps:
@@ -86,7 +86,7 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
-          curl -vv http://localhost:5000/health-check
+          curl -vv http://localhost:5000/health
         
         
           
