@@ -56,9 +56,10 @@ jobs:
         run: echo "${{ secrets.ENV_FILE }}" > .env
       - name: Deploy Application With Docker Compose
         run: |
+          pwd 
+          ls -la
           docker compose up -d
           docker ps -a
-              - name: Unit test 
       - name: Run E2E Test
         run: | 
           response_code=$(curl -o /dev/null -s -v -w "%{http_code}" http://localhost:5000)
