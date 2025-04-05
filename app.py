@@ -34,6 +34,15 @@ def create_table_if_not_exists():
     finally:
         connection.close()
 
+@app.route('/health-check')
+def health_check():
+    try:
+        connection = get_db_connection()
+        connection.close()
+        return (jsonify({"message": f"Application is up and running."}), 200)
+    except Exception as e:
+        return (jsonify({"message": f"Server failed connection to database. Error: {str(e)}"}), 500)
+        
 @app.route('/')
 def home():
     hostname = socket.gethostname()
@@ -76,7 +85,7 @@ def home():
         connection.close()
 
         return jsonify({
-            "message": f"Data fetched successfully from the database. \nTotal Entries: {len(previous_entries)}",
+            "message": f"Data fetched successfully from the database. Total Entries: {len(previous_entries)}",
             "current_entry": current_entry,
             "previous_entries": previous_entries
         })
