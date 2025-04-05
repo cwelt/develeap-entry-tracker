@@ -85,6 +85,13 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
+      - name: Run E2E Test 2
+        run: | 
+          docker compose down 
+          sleep 2s
+          docker compose up -d
+          sleep 3s
+          curl -v http://localhost:5000
         
         
           
