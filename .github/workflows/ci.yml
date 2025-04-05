@@ -65,8 +65,6 @@ jobs:
     steps:
       - name: Checkout Repository 
         uses: actions/checkout@v4
-      - name: Initialize Environment Variables 
-        run: echo "${{ secrets.ENV_FILE }}" > .env
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
@@ -85,6 +83,8 @@ jobs:
       - name: Run E2E Test
         run: | 
           sleep 3s
+          echo "docker ps:"
+          docker ps
           response_code=$(curl -o /dev/null -s -v -w "%{http_code}" http://localhost:5000)
           if [ "$response_code" -eq 200 ]; then      # Assert application is up and running
             echo "Health check completed successfully: HTTP status code is $response_code."
