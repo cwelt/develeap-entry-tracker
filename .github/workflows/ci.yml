@@ -80,6 +80,11 @@ jobs:
           ls -la
           docker compose up -d
           docker ps -a
+          echo -e "ENV\n\n\n\n\n\n\\n\n=============================:"
+          echo "PORT=$DB_PORT"
+          echo "USER=$DB_USER"
+          env | grep "DB"
+     
       - name: Run E2E Test
         run: | 
           sleep 3s
@@ -92,8 +97,8 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
-          curl -vv http://127.0.0.1:5000/health
-          curl -vv http://127.0.0.1:5000/
+          curl -vv http://localhost:5000/health
+          curl -vv http://localhost:5000/
         
         
           
