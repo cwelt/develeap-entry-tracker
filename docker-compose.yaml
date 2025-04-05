@@ -1,7 +1,7 @@
 
 services:
   web:
-    build: .
+    image: entry-tracker:latest
     container_name: flask-app
     environment:
       - DB_HOST=${DB_HOST}    # change this when replacing MySQL contianer with another database
@@ -19,7 +19,7 @@ services:
       - app_network
 
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0-debian
     container_name: mysql-db
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
