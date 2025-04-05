@@ -52,6 +52,10 @@ jobs:
           overwrite: true
           retention-days: 7
           if-no-files-found: error
+      - name: Checkout Repository 
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5.5.0
       - name: Prepare Environment 
         run: echo "${{ secrets.ENV_FILE }}" > .env
       - name: Deploy Application With Docker Compose
