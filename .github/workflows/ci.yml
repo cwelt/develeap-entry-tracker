@@ -94,6 +94,11 @@ jobs:
           sleep 3s
           docker ps 
           curl -v http://localhost:5000
+          curl -v http://localhost:5000
+          curl -v http://localhost:5000
+          curl -v http://localhost:5000
+          curl -v http://localhost:5000
+          curl -v http://localhost:5000
         
         
           
