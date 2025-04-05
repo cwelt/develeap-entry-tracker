@@ -37,10 +37,16 @@ jobs:
   integration-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository 
-        uses: actions/checkout@v4
-      - name: Package Application
-        run: | 
-          docker build -t entry-tracker:latest .
-          docker images
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and Export Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          tags: entryTracker:latest
+          outputs: type=docker,dest=${{ runner.temp }}/entryTracker.tar
+      - name: Upload Docker Image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: entryTracker
+          path: ${{ runner.temp }}/entryTracker.tar
         
