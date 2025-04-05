@@ -37,8 +37,9 @@ def create_table_if_not_exists():
 @app.route('/health-check')
 def health_check():
     # Connect to the database
+    connection = get_db_connection()
+    
     try:
-        connection = get_db_connection()
         create_table_if_not_exists()
         
         # Assert database is connected 
