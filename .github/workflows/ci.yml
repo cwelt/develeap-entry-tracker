@@ -86,7 +86,8 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
-          curl -vv http://localhost:5000/health
+          curl -vv http://127.0.0.1:5000/health
+          curl -vv http://127.0.0.1:5000/
         
         
           
