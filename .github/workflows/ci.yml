@@ -49,4 +49,9 @@ jobs:
         with:
           name: entry-tracker
           path: ${{ runner.temp }}/entry-tracker.tar
+          overwrite: true
+          retention-days: 7
+          if-no-files-found: error
+          
+          
         
