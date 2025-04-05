@@ -42,11 +42,11 @@ jobs:
       - name: Build and Export Docker Image
         uses: docker/build-push-action@v6
         with:
-          tags: entryTracker:latest
-          outputs: type=docker,dest=${{ runner.temp }}/entryTracker.tar
+          tags: entry-tracker:latest
+          outputs: type=docker,dest=${{ runner.temp }}/entry-tracker.tar
       - name: Upload Docker Image artifact
         uses: actions/upload-artifact@v4
         with:
-          name: entryTracker
-          path: ${{ runner.temp }}/entryTracker.tar
+          name: entry-tracker
+          path: ${{ runner.temp }}/entry-tracker.tar
         
