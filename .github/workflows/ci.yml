@@ -34,6 +34,7 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
+          curl -vv http://localhost:5000/health-check
   build:
     runs-on: ubuntu-latest
     steps:
@@ -85,20 +86,7 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
-      - name: Run E2E Test 2
-        run: | 
-          docker ps -a 
-          docker compose down 
-          sleep 2s
-          docker compose up -d
-          sleep 3s
-          docker ps 
-          curl -v http://localhost:5000
-          curl -v http://localhost:5000
-          curl -v http://localhost:5000
-          curl -v http://localhost:5000
-          curl -v http://localhost:5000
-          curl -v http://localhost:5000
+          curl -vv http://localhost:5000/health-check
         
         
           
