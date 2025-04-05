@@ -56,7 +56,7 @@ jobs:
         run: echo "${{ secrets.ENV_FILE }}" > .env
       - name: Deploy Application With Docker Compose
         run: |
-          docker compose -d
+          docker compose up -d
           docker ps -a
               - name: Unit test 
       - name: Run E2E Test
