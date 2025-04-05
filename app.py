@@ -11,7 +11,8 @@ DB_CONFIG = {
     'host': os.environ.get('DB_HOST'), 
     'user': os.environ.get('DB_USER'), 
     'password': os.environ.get('DB_PASSWORD'), 
-    'database': os.environ.get('DB_NAME') 
+    'database': os.environ.get('DB_NAME'),
+    'connect_timeout': 5
 }
 
 def get_db_connection():
@@ -34,21 +35,15 @@ def create_table_if_not_exists():
     finally:
         connection.close()
 
-@app.route('/health-check')
+@app.route('/health')
 def health_check():
-    connection = get_db_connection()
     try:
-        # Connect to the database
-        create_table_if_not_exists()
-        # Assert database is connected 
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT 1 FROM request_log WHERE ID = 1")
-        return (jsonify({"message": f"Application is up and running."}), 200)
-    except Exception as e:
-        return (jsonify({"message": f"Server failed connecting to the database. Error: {str(e)}"}), 500)
-    finally: 
+        connection = get_db_connection()
         connection.close()
-        
+        return "Database is up!", 200
+    except Exception as e:
+        return f"Database error: {str(e)}", 500
+
 @app.route('/')
 def home():
     hostname = socket.gethostname()
