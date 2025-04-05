@@ -6,12 +6,12 @@ from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-# Database connection configurations (update with your MySQL RDS or Docker MySQL config)
+# Database connection configurations 
 DB_CONFIG = {
-    'host': os.environ.get('DB_HOST', 'mysql'),  # Use 'mysql' for Docker service name or your RDS endpoint for AWS
-    'user': os.environ.get('DB_USER', 'root'),  # MySQL user
-    'password': os.environ.get('DB_PASSWORD', 'password'),  # MySQL password
-    'database': os.environ.get('DB_NAME', 'app_db')  # Database name
+    'host': os.environ.get('DB_HOST'), 
+    'user': os.environ.get('DB_USER'), 
+    'password': os.environ.get('DB_PASSWORD'), 
+    'database': os.environ.get('DB_NAME') 
 }
 
 def get_db_connection():
