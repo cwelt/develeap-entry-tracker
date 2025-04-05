@@ -52,6 +52,14 @@ jobs:
           overwrite: true
           retention-days: 7
           if-no-files-found: error
+      - name: prepare-environment 
+        run: echo "${{ .secrets.ENV_FILE }} > .env
+      - name: e2e-test
+        run: |
+          cat ./.env
+          docker compose up &
+          docker ps -a
+        
           
           
         
