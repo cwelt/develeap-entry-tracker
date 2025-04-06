@@ -34,7 +34,6 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi
-          curl -vv http://localhost:5000/health
   build:
     runs-on: ubuntu-latest
     steps:
@@ -61,8 +60,6 @@ jobs:
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      MYSQL_DATABASE:  ${{ secrets.DB_NAME }}
     steps:
       - name: Checkout Repository 
         uses: actions/checkout@v4
@@ -77,31 +74,21 @@ jobs:
           docker images
       - name: Deploy Application With Docker Compose
         run: |
-          pwd 
-          ls -la
           docker compose up -d
-          docker ps -a
-          echo -e "docker compose logs\n\n\n\n============================"
+          sleep 5s
+          echo "flask container logs:"
+          echo "-----------------------"
+          docker compose logs web
+          echo "mysql container logs:"
+          echo "-----------------------"
+          docker compose logs mysql
      
       - name: Run E2E Test
         run: | 
-          sleep 10s
-          docker compose logs mysql
-          docker logs mysql
-          echo "docker ps:"
-          docker ps
-          response_code=$(curl -o /dev/null -s -v -w "%{http_code}" http://localhost:5000)
+          response_code=$(curl -o /dev/null -s -v -w "%{http_code}" http://localhost:5000/health)
           if [ "$response_code" -eq 200 ]; then      # Assert application is up and running
             echo "Health check completed successfully: HTTP status code is $response_code."
           else
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
-          fi
-          netstat -tln | grep 3306
-          curl -vv http://localhost:5000/health
-          curl -vv http://localhost:5000
-        
-        
-          
-          
-        
+          fi       
