@@ -129,5 +129,5 @@ jobs:
       - name: Modify Security Group
         run: |
           aws ec2 authorize-security-group-ingress --group-id sg-045872332b65ce455 \
-            --protocol tcp --port 22 --cidr $RUNNER_IP" IP>/32
+            --protocol tcp --port 22 --cidr $RUNNER_IP/32
         
