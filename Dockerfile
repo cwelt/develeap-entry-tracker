@@ -10,7 +10,7 @@ COPY app.py requirements.txt /app/
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENV APP_VERSION=$(curl -s https://api.github.com/repos/cwelt/develeap-entry-tracker/git/refs/tags | jq -r '.[-1].ref' | sed 's|refs/tags/||')
+ENV APP_VERSION=$(git tag --sort=-committerdate | head -n 1)
 
 # Expose the application port
 EXPOSE 5000
