@@ -1,11 +1,17 @@
 # Entry Tracker
 
+[![CI](https://github.com/cwelt/develeap-entry-tracker/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cwelt/develeap-entry-tracker/actions/workflows/ci.yml)
+
+Repository: https://github.com/cwelt/develeap-entry-tracker
+
 ## Description 
 This repo contains a basic CI/CD pipeline implementation for building, testing, publising and deploying a python flask application that tracks app client entries
 and logs them in a MySQL database. 
 
-Application is deployed on an AWS EC2 instance ☁️,  
-click [here](http://ec2-3-108-42-106.ap-south-1.compute.amazonaws.com:5000/) to try it for your self. 
+![image](https://github.com/user-attachments/assets/d7e9ec8c-2fa3-4d53-afa0-e4b429b70467)
+
+Application is served on an AWS EC2 instance ☁️,  
+click [here](http://ec2-3-108-42-106.ap-south-1.compute.amazonaws.com:5000/) to try it for yourself. 
 
 The CI includes the following tests - 
 * **_Unit Tests_** for setting a python environment, installing dependencies & running the application.
