@@ -130,7 +130,7 @@ jobs:
       - name: Push Image
         run: | 
           docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
-          docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:LATEST_TAG_VERSION
+          docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:${LATEST_TAG_VERSION}
 
   deploy:
     needs: publish
