@@ -85,3 +85,31 @@ jobs:
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
           fi      
+  publish:
+    needs: [unit-test, integration-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: entry-tracker
+          path: ${{ runner.temp }}
+      - name: Load image
+        run: |
+         docker load --input ${{ runner.temp }}/entry-tracker.tar
+         docker images
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-south-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  
+      - name: Login to Amazon ECR Public
+        id: login-ecr-public
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
+      - name: Tag Image
+        run: docker tag develeap/entry-tracker:latest public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
+      - name: Push Image
+        run: docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
