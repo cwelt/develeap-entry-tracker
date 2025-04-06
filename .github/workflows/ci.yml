@@ -58,7 +58,7 @@ jobs:
     needs: build
     env:
       DB_PORT: 3306
-      DB_HOST: mysql-db
+      DB_HOST: mysql
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{secrets.DB_PASSWORD }}
@@ -80,10 +80,7 @@ jobs:
           ls -la
           docker compose up -d
           docker ps -a
-          echo -e "ENV\n\n\n\n\n\n\\n\n=============================:"
-          echo "PORT=$DB_PORT"
-          echo "USER=$DB_USER"
-          env | grep "DB"
+          docker-compose logs mysql
      
       - name: Run E2E Test
         run: | 
