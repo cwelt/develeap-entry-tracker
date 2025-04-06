@@ -133,12 +133,14 @@ jobs:
             --protocol tcp --port 22 --cidr "$RUNNER_IP/32"
       - name: Send SSH Key via EC2 Instance Connect
         run: |
-          ssh-keygen -t rsa -b 4096 -f runner-key -N ""     # generate ssh key pair for this runner 
-          aws ec2-instance-connect send-ssh-public-key \        # set instance connect 
+          ssh-keygen -t rsa -b 4096 -f my-key -N ""
+          PUBLIC_KEY=$(awk '{print $1,$2}' my-key.pub)
+          echo "$PUBLIC_KEY"
+          aws ec2-instance-connect send-ssh-public-key \
             --instance-id ${{ secrets.AWS_EC2_INSTANCE_ID }} \
             --availability-zone ap-south-1a \
-            --instance-os-user ${{ secrets.AWS_EC2_OS_USER }} \
-            --ssh-public-key $(grep '^ssh-rsa' runner-key.pub)
+            --instance-os-user ubuntu \
+            --ssh-public-key "$PUBLIC_KEY"
       - name: Connect to EC2 via SSH And Deploy Application
         run: | 
           ssh -o StrictHostKeyChecking=no -i runner-key ${{ secrets.AWS_EC2_FQDN }} "
