@@ -39,7 +39,7 @@ def health_check():
     try:
         connection = get_db_connection()
         connection.close()
-        return "Database is up!", 200
+        return "Application & database are up and running!", 200
     except Exception as e:
         return f"Database error: {str(e)}", 500
 
