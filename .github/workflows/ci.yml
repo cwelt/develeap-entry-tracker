@@ -135,6 +135,7 @@ jobs:
         run: |
           ssh-keygen -t rsa -b 4096 -f runner-key -N ""     # generate ssh key pair for this runner 
           PUBLIC_KEY=$(grep '^ssh-rsa' runner-key.pub | tr -d '\n')      # extract public key
+          awk '{printf "%s ", $0}' file.txt
           echo "Public key is: $PUBLIC_KEY"
           aws ec2-instance-connect send-ssh-public-key \        # set instance connect 
             --instance-id ${{ secrets.AWS_EC2_INSTANCE_ID }} \
