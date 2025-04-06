@@ -98,12 +98,6 @@ jobs:
         run: |
          docker load --input ${{ runner.temp }}/entry-tracker.tar
          docker images
-#      - name: Configure AWS Credentials
- #       uses: aws-actions/configure-aws-credentials@v4
-  #      with:
-   #       aws-region: ap-south-1
-    #      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-     #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  
       - name: Login to Public ECR
         uses: docker/login-action@v3
         with:
@@ -116,3 +110,24 @@ jobs:
         run: docker tag entry-tracker:latest public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
       - name: Push Image
         run: docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
+
+  modify-security-group:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Get Runner's IP
+        run: |
+          echo "RUNNER_IP=$(curl -s https://api64.ipify.org)" >> $GITHUB_ENV
+      - name: Use Saved IP in Another Step
+        run: echo "The runner's IP is $RUNNER_IP"
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_SG_ROLE_ARN }}
+          aws-region: ap-south-1
+      - name: Modify Security Group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id sg-045872332b65ce455 \
+            --protocol tcp --port 22 --cidr $RUNNER_IP" IP>/32
+        
