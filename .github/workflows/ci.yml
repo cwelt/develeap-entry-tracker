@@ -133,9 +133,9 @@ jobs:
             --protocol tcp --port 22 --cidr "$RUNNER_IP/32"
       - name: Send SSH Key via EC2 Instance Connect
         run: |
-          ssh-keygen -t rsa -b 4096 -f my-key -N ""             # generate ssh key pair for this runner 
-          PUBLIC_KEY=$(awk '{print $1,$2}' my-key.pub)          # extract public key
-          echo "$PUBLIC_KEY"
+          ssh-keygen -t rsa -b 4096 -f runner-key -N ""                          # generate ssh key pair for this runner 
+          PUBLIC_KEY=$(awk '{print $1,$2}' runner-key.pub) | tr -d '\n'          # extract public key
+          echo "Public key is: $PUBLIC_KEY"
           aws ec2-instance-connect send-ssh-public-key \        # set instance connect 
             --instance-id ${{ secrets.AWS_EC2_INSTANCE_ID }} \
             --availability-zone ap-south-1a \
@@ -143,7 +143,7 @@ jobs:
             --ssh-public-key "$PUBLIC_KEY"
       - name: Connect to EC2 via SSH And Deploy Application
         run: | 
-          ssh -o StrictHostKeyChecking=no -i my-key ${{ secrets.AWS_EC2_FQDN }} "
+          ssh -o StrictHostKeyChecking=no -i runner-key ${{ secrets.AWS_EC2_FQDN }} "
           cd ~/entry-tracker && 
           docker compose down && 
           sleep 10s &&
