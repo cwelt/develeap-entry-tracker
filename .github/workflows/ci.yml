@@ -148,8 +148,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i my-key ${{ secrets.AWS_EC2_FQDN }} "
           cd ~/entry-tracker && 
           docker compose down && 
-          sleep 10s &&
-          # docker images | grep entry-tracker | tr -s ' ' | cut -d ' ' -f3 | xargs docker rmi &&   # remove old image from instance
+          sleep 15s &&
+          docker images | grep entry-tracker | tr -s ' ' | cut -d ' ' -f3 | xargs docker rmi &&   # remove old image from instance
+          docker compose stop && docker compose rm && sleep 3s
           docker compose up -d --pull always && 
           echo 'Deploy Completed Successfully on $(date -Iseconds).'" 
       - name: Cleanup Runner IP From Security Group 
