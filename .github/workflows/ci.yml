@@ -121,8 +121,8 @@ jobs:
           echo "LATEST_TAG_VERSION=$new_version_tag" >> $GITHUB_ENV
       - name: Tag Repo Refernce 
         run: |
-          git tag "$LATEST_TAG_VERSION"
-          git push origin "$LATEST_TAG_VERSION"
+          git tag -f "$LATEST_TAG_VERSION"
+          git push --force origin "$LATEST_TAG_VERSION"
       - name: Tag Image
         run: | 
           docker tag entry-tracker:latest public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest 
