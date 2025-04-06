@@ -62,6 +62,8 @@ jobs:
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      MYSQL_DATABASE:  ${{ secrets.DB_NAME }}
     steps:
       - name: Checkout Repository 
         uses: actions/checkout@v4
@@ -80,6 +82,7 @@ jobs:
           ls -la
           docker compose up -d
           docker ps -a
+          echo: "docker compose logs"
           docker compose logs mysql
      
       - name: Run E2E Test
