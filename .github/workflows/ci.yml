@@ -140,7 +140,7 @@ jobs:
           aws ec2-instance-connect send-ssh-public-key \
             --instance-id ${{ secrets.AWS_EC2_INSTANCE_ID }} \
             --availability-zone ap-south-1a \
-            --instance-os-user ubuntu \
+            --instance-os-user ${{ secrets.AWS_EC2_OS_USER }} \
             --ssh-public-key "$PUBLIC_KEY"
       - name: Connect to EC2 via SSH And Deploy Application
         run: | 
