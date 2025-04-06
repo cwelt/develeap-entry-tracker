@@ -106,7 +106,9 @@ jobs:
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         env:
           AWS_REGION: us-east-1
-      - name: Calculate Tag's Next Version  
+      - name: Check out code 
+        uses: actions/checkout@v4    
+      - name: Calculate Next Version 
         run: | 
           current_version_tag=$(git describe --tags --abbrev=0 || echo "v1.0.0")
           # Extract major, minor, patch from the latest tag
