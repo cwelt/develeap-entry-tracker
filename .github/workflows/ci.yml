@@ -89,12 +89,12 @@ jobs:
     needs: [unit-test, integration-test]
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
+      - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
           name: entry-tracker
           path: ${{ runner.temp }}
-      - name: Load image
+      - name: Load Image
         run: |
          docker load --input ${{ runner.temp }}/entry-tracker.tar
          docker images
@@ -106,10 +106,29 @@ jobs:
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         env:
           AWS_REGION: us-east-1
+      - name: Calculate Tag's Next Version  
+        run: | 
+          current_version_tag=$(git describe --tags --abbrev=0 || echo "v1.0.0")
+          # Extract major, minor, patch from the latest tag
+          major=$(echo $current_version_tag | cut -d '.' -f1 | sed 's/v//')  # Remove 'v' if present
+          minor=$(echo $current_version_tag | cut -d '.' -f2)
+          patch=$(echo $current_version_tag | cut -d '.' -f3)
+          new_version_patch=$((patch + 1))
+          # Form the new tag
+          new_version_tag="${major}.${minor}.${new_version_patch}"      # Form the new tag
+          echo "LATEST_TAG_VERSION=$new_version_tag" >> $GITHUB_ENV
+      - name: Tag Repo Refernce 
+        run: 
+          git tag "$LATEST_TAG_VERSION"
+          git push origin "$LATEST_TAG_VERSION"
       - name: Tag Image
-        run: docker tag entry-tracker:latest public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
+        run: | 
+          docker tag entry-tracker:latest public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest 
+          docker tag entry-tracker:latest public.ecr.aws/a2q3a8e9/develeap/entry-tracker:${LATEST_TAG_VERSION}
       - name: Push Image
-        run: docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
+        run: | 
+          docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
+          docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:LATEST_TAG_VERSION
 
   deploy:
     needs: publish
