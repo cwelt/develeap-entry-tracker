@@ -120,7 +120,7 @@ jobs:
           new_version_tag="${major}.${minor}.${new_version_patch}"      # Form the new tag
           echo "LATEST_TAG_VERSION=$new_version_tag" >> $GITHUB_ENV
       - name: Tag Repo Refernce 
-        run: 
+        run: |
           git tag "$LATEST_TAG_VERSION"
           git push origin "$LATEST_TAG_VERSION"
       - name: Tag Image
