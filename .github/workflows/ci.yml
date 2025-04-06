@@ -113,6 +113,6 @@ jobs:
         env:
           AWS_REGION: us-east-1
       - name: Tag Image
-        run: docker tag develeap/entry-tracker:latest public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
+        run: docker tag entry-tracker:latest public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
       - name: Push Image
         run: docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
