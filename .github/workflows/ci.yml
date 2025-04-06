@@ -140,14 +140,19 @@ jobs:
           aws ec2-instance-connect send-ssh-public-key \
             --instance-id ${{ secrets.AWS_EC2_INSTANCE_ID }} \
             --availability-zone ap-south-1a \
-            --instance-os-user ubuntu \
+            --instance-os-user ${{ secrets.AWS_EC2_OS_USER }} \
             --ssh-public-key "$PUBLIC_KEY"
       - name: Connect to EC2 via SSH
-        run: ssh -o StrictHostKeyChecking=no -i my-key ubuntu@ec2-3-108-42-106.ap-south-1.compute.amazonaws.com
-      - name: Remove Runner From Security Group 
+        run: ssh -o StrictHostKeyChecking=no -i my-key ${{ secrets.AWS_EC2_FQDN }}
+      - name: Teardown Existing Running Application 
+        run: | 
+          cd ~/entry-tracker
+          docker compose down
+          sleep 3s
+          docker rmi $(docker images | grep entry-tracker | tr -s ' ' | cut -d ' ' -f3) # remove old image from instance
+      - name: Restart Application With Modified Image 
+        run: docker compose up -d --pull always 
+      - name: Cleanup Runner IP From Security Group 
         run: | 
           aws ec2 revoke-security-group-ingress --group-id "$SECURITY_GROUP_ID" \
             --protocol tcp --port 22 --cidr "$RUNNER_IP/32"
-      
-
-            
