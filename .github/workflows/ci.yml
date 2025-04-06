@@ -133,8 +133,9 @@ jobs:
             --protocol tcp --port 22 --cidr "$RUNNER_IP/32"
       - name: Send SSH Key via EC2 Instance Connect
         run: |
-          ssh-keygen -t rsa -b 4096 -f my-key -N ""
-          PUBLIC_KEY=$(awk '{print $1,$2}' my-key.pub)
+          ssh-keygen -t rsa -b 4096 -f runner-key -N ""
+          ls -la
+          PUBLIC_KEY=$(awk '{print $1,$2}' runner-key.pub)
           echo "$PUBLIC_KEY"
           aws ec2-instance-connect send-ssh-public-key \
             --instance-id ${{ secrets.AWS_EC2_INSTANCE_ID }} \
