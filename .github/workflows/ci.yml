@@ -111,23 +111,41 @@ jobs:
       - name: Push Image
         run: docker push public.ecr.aws/a2q3a8e9/develeap/entry-tracker:latest
 
-  modify-security-group:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+    env:
+      SECURITY_GROUP_ID: ${{ secrets.AWS_EC2_SG_ID }}
     steps:
-      - name: Get Runner's IP
+      - name: Get Runner's IP # For granting dynamic SSH access 
         run: |
           echo "RUNNER_IP=$(curl -s https://api64.ipify.org)" >> $GITHUB_ENV
       - name: Use Saved IP in Another Step
         run: echo "The runner's IP is $RUNNER_IP"
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials # For Security Groups Maintenance Permission
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_SG_ROLE_ARN }}
           aws-region: ap-south-1
-      - name: Modify Security Group
+      - name: Add Runner To Security Group
         run: |
-          aws ec2 authorize-security-group-ingress --group-id sg-045872332b65ce455 \
-            --protocol tcp --port 22 --cidr $RUNNER_IP/32
-        
+          aws ec2 authorize-security-group-ingress --group-id "$SECURITY_GROUP_ID" \
+            --protocol tcp --port 22 --cidr "$RUNNER_IP/32"
+      - name: Send SSH Key via EC2 Instance Connect
+        run: |
+          PUBLIC_KEY=$(ssh-keygen -t rsa -b 4096 -f my-key -N "" && cat my-key.pub)
+          aws ec2-instance-connect send-ssh-public-key \
+            --instance-id ${{ secrets.AWS_EC2_INSTANCE_ID }} \
+            --availability-zone ap-south-1a \
+            --instance-os-user ubuntu \
+            --ssh-public-key "$PUBLIC_KEY"
+      - name: Connect to EC2 via SSH
+        run: ssh -o StrictHostKeyChecking=no -i my-key ubuntu@ec2-3-108-42-106.ap-south-1.compute.amazonaws.com
+      - name: Remove Runner From Security Group 
+        run: | 
+          aws ec2 revoke-security-group-ingress --group-id "$SECURITY_GROUP_ID" \
+            --protocol tcp --port 22 --cidr "$RUNNER_IP/32"
+      
+
+            
