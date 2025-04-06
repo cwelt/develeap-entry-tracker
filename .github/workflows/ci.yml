@@ -82,13 +82,12 @@ jobs:
           docker compose up -d
           docker ps -a
           echo -e "docker compose logs\n\n\n\n============================"
-          docker compose logs mysql
-          docker exec -it mysql mysql -u root -p'"$DB_PASSWORD"'
-          docker logs mysql
      
       - name: Run E2E Test
         run: | 
-          sleep 3s
+          sleep 10s
+          docker compose logs mysql
+          docker logs mysql
           echo "docker ps:"
           docker ps
           response_code=$(curl -o /dev/null -s -v -w "%{http_code}" http://localhost:5000)
