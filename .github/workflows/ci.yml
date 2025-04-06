@@ -119,26 +119,23 @@ jobs:
     env:
       SECURITY_GROUP_ID: ${{ secrets.AWS_EC2_SG_ID }}
     steps:
-      - name: Get Runner's IP # For granting dynamic SSH access 
+      - name: Get Runner IP # For granting temporarily SSH network access 
         run: |
           echo "RUNNER_IP=$(curl -s https://api64.ipify.org)" >> $GITHUB_ENV
-      - name: Use Saved IP in Another Step
-        run: echo "The runner's IP is $RUNNER_IP"
       - name: Configure AWS Credentials # For Security Groups Maintenance Permission
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_SG_ROLE_ARN }}
           aws-region: ap-south-1
-      - name: Add Runner To Security Group
+      - name: Add Runner to EC2 Security Group
         run: |
           aws ec2 authorize-security-group-ingress --group-id "$SECURITY_GROUP_ID" \
             --protocol tcp --port 22 --cidr "$RUNNER_IP/32"
       - name: Send SSH Key via EC2 Instance Connect
         run: |
-          ssh-keygen -t rsa -b 4096 -f my-key -N ""
-          PUBLIC_KEY=$(awk '{print $1,$2}' my-key.pub)
-          echo "$PUBLIC_KEY"
-          aws ec2-instance-connect send-ssh-public-key \
+          ssh-keygen -t rsa -b 4096 -f my-key -N ""             # generate ssh key pair for this runner 
+          PUBLIC_KEY=$(awk '{print $1,$2}' my-key.pub)          # extract public key
+          aws ec2-instance-connect send-ssh-public-key \        # set instance connect 
             --instance-id ${{ secrets.AWS_EC2_INSTANCE_ID }} \
             --availability-zone ap-south-1a \
             --instance-os-user ${{ secrets.AWS_EC2_OS_USER }} \
@@ -148,12 +145,11 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i my-key ${{ secrets.AWS_EC2_FQDN }} "
           cd ~/entry-tracker && 
           docker compose down && 
-          sleep 15s &&
+          sleep 10s &&
           docker images | grep entry-tracker | tr -s ' ' | cut -d ' ' -f3 | xargs docker rmi &&   # remove old image from instance
-          docker compose stop && docker compose rm && sleep 3s
           docker compose up -d --pull always && 
           echo 'Deploy Completed Successfully on $(date -Iseconds).'" 
-      - name: Cleanup Runner IP From Security Group 
+      - name: Remove Runner from EC2 Security Group 
         run: | 
           aws ec2 revoke-security-group-ingress --group-id "$SECURITY_GROUP_ID" \
             --protocol tcp --port 22 --cidr "$RUNNER_IP/32"
