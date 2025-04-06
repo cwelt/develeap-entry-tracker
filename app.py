@@ -86,6 +86,7 @@ def home():
 
         return jsonify({
             "message": f"Data fetched successfully from the database. Total Entries: {len(previous_entries)}",
+            "application version": "$APP_VERSION",
             "current_entry": current_entry,
             "previous_entries": previous_entries
         })
