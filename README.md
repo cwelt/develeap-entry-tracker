@@ -1,5 +1,9 @@
 # Entry Tracker
 
+[![CI](https://github.com/cwelt/develeap-entry-tracker/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cwelt/develeap-entry-tracker/actions/workflows/ci.yml)
+
+Repository: https://github.com/cwelt/develeap-entry-tracker
+
 ## Description 
 This repo contains a basic CI/CD pipeline implementation for building, testing, publising and deploying a python flask application that tracks app client entries
 and logs them in a MySQL database. 
