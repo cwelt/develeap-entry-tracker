@@ -75,7 +75,7 @@ jobs:
       - name: Deploy Application With Docker Compose
         run: |
           docker compose up -d
-          sleep 5s
+          sleep 10s
           echo "flask container logs:"
           echo "-----------------------"
           docker compose logs web
@@ -91,4 +91,6 @@ jobs:
           else
             echo "Health check failed: HTTP status code is $response_code."
             exit 1          
-          fi       
+          fi      
+          curl -v http://localhost:5000/health
+          curl http://localhost:5000/health
